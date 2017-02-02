@@ -1,0 +1,27 @@
+server {
+    listen       HTTPS ssl;
+    server_name  FQDN;
+
+    ssl_certificate /etc/nginx/ssl/ssl.crt;
+    ssl_certificate_key /etc/nginx/ssl/ssl.key;
+
+    # static files
+    location ^~ /loleaflet {
+        proxy_pass https://DESTINATION;
+        proxy_set_header Host $http_host;
+    }
+
+    # WOPI discovery URL
+    location ^~ /hosting/discovery {
+        proxy_pass https://DESTINATION;
+        proxy_set_header Host $http_host;
+    }
+
+    # websockets, download, presentation and image upload
+    location ^~ /lool {
+        proxy_pass https://DESTINATION;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $http_host;
+    }
+}
